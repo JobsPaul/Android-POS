@@ -16,6 +16,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.posapp.Ui.Login.Models.ICallBackUserLogin;
@@ -46,25 +47,7 @@ public class ApiCallers {
         StringRequest request = new StringRequest(Request.Method.GET, URLs.ROOT_URL_Username, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                System.out.println("Result Response :" + response);
-
-                callback.onListUsernameSuccess(response, "", "");
-//                    JSONArray jsonArray = new JSONArray(response);
-//                    JSONObject jsonObject = null;
-//
-//                    for (int i = 0; i < jsonArray.length() ; i++ ) {
-//                        jsonObject = jsonArray.getJSONObject(i);
-//                        String employeeId = jsonObject.getString("empId");
-//                        String username = jsonObject.getString("username");
-//                        String fName = jsonObject.getString("fName");
-//                        callback.onListUsernameSuccess(employeeId, username, fName);
-//                    }
-
-//                    String employeeId = respObj.getString("empId");
-//                    String username = respObj.getString("username");
-//                    String fName = respObj.getString("fName");
-//                    callback.onListUsernameSuccess(employeeId, username, fName);
-
+                callback.onListUsernameSuccess(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -88,23 +71,98 @@ public class ApiCallers {
                     Toast.makeText(context.getApplicationContext(), "Communication Error!", Toast.LENGTH_SHORT).show();
                     message = "Communication Error!";
                 }
-                String found = "error";
-                callback.onListUsernameSuccess("", "", "");
+                callback.onListUsernameSuccess(message);
             }
         });
-//        {
-//            @Override
-//            protected Map<String, String> getParams(){
-//                Map<String, String> params = new HashMap<String, String>();
-//                params.put("Username", userName);
-//                return params;
-//            }
-//        };
         queue.add(request);
     }
 
-    public void postEmployees(final ICallBackUserLogin callback) {
-        StringRequest request = new StringRequest(Request.Method.POST, "https://yndapi.azurewebsites.net/api/Authentication", new Response.Listener<String>() {
+    public void postEmployees(String username ,String password, final ICallBackUserLogin callback) {
+        final String url ="https://yndapi.azurewebsites.net/api/Authentication";
+        try {
+            JSONObject object2 = new JSONObject();
+//            object2.put("empId", "0");
+            object2.put("username", username);
+            object2.put("hashPassword", password);
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URLs.ROOT_URL_Authentication, object2 ,new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    System.out.println("Result Ans = " + response);
+                }
+            } , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_RESPONSE", error.toString());
+                    callback.onListUsernameSuccess("Failed");
+                }
+            })
+            {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json";
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(stringRequest);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void postEmployeesTest(String password) {
+        try {
+            JSONObject jsonBody = new JSONObject();
+            jsonBody.put("empId", "0");
+            jsonBody.put("username", "new");
+            jsonBody.put("hashPassword", password);
+            final String mRequestBody = jsonBody.toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.ROOT_URL_Authentication, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("LOG_RESPONSE", response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_RESPONSE", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError
+                {
+                    try { return mRequestBody == null ? null : mRequestBody.getBytes("utf-8"); }
+                    catch (UnsupportedEncodingException ex) { return null; }
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+            };
+            queue.add(stringRequest);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void postEmployeesTest2(final ICallBackUserLogin callback) {
+        StringRequest request = new StringRequest(Request.Method.POST, URLs.ROOT_URL_Authentication, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 System.out.println("Result Response :" + response);
