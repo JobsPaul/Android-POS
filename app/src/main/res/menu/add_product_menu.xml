@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_clear"
+        android:icon="@drawable/ic_baseline_clear"
+        android:title="ล้างข้อมูล" />
+    <item
+        android:id="@+id/nav_save"
+        android:icon="@drawable/ic_baseline_save"
+        android:title="บันทึกข้อมูล" />
+</menu>

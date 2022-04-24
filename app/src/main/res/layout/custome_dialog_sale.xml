@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/blue"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/titleDialog"
+        android:layout_width="338dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="5dp"
+        android:text="  แก้ไขสินค้า"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/cancelIconBtn"
+        android:layout_width="28dp"
+        android:layout_height="27dp"
+        android:layout_marginEnd="8dp"
+        android:background="?android:selectableItemBackground"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="@+id/view2"
+        app:layout_constraintTop_toTopOf="@+id/view2"
+        app:srcCompat="@drawable/ic_baseline_clear_red"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/titleCodeProductText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="8dp"
+        android:text="รหัสสินค้า"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/productNoDialogTxt"
+        android:layout_width="100dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="88529710220"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        app:layout_constraintStart_toEndOf="@+id/titleCodeProductText"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/tiletleNameProductText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="8dp"
+        android:text="ชื่อสินค้า"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleCodeProductText" />
+
+    <TextView
+        android:id="@+id/productNameDialogTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:text="Beer Leo Bottle 620ML "
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/tiletleNameProductText"
+        app:layout_constraintTop_toBottomOf="@+id/productNoDialogTxt" />
+
+    <TextView
+        android:id="@+id/titlePackDialogText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="8dp"
+        android:text="จำนวนแพ็ค"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/productNameDialogTxt" />
+
+    <TextView
+        android:id="@+id/packDialogText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="8dp"
+        android:text="Pack 24"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/titlePackDialogText"
+        app:layout_constraintTop_toBottomOf="@+id/productNameDialogTxt" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/messageTextInputLayout1"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:boxStrokeColor="@color/teal_700"
+        app:hintTextColor="@color/teal_700"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/packDialogText">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/countEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="จำนวนของสินค้า"
+            android:phoneNumber="true"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/messageTextInputLayout2"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:boxStrokeColor="@color/teal_700"
+        app:hintTextColor="@color/teal_700"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messageTextInputLayout1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/priceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:phoneNumber="true"
+            android:hint="ราคาของสินค้า"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/titleTotalPriceDialogTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="8dp"
+        android:text="ราคารวม"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messageTextInputLayout2" />
+
+    <TextView
+        android:id="@+id/totalPriceDialogTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:text="1,100.00"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/titleTotalPriceDialogTxt"
+        app:layout_constraintTop_toBottomOf="@+id/messageTextInputLayout2" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/date_color"
+        android:text="ยกเลิก"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/deleteButton"
+        app:layout_constraintTop_toBottomOf="@+id/titleTotalPriceDialogTxt" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/red"
+        android:text="ลบ"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTotalPriceDialogTxt" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:backgroundTint="@color/teal_700"
+        android:text="ยืนยัน"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/cancelButton"
+        app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+
+
+    <!--    <TextView-->
+<!--        android:id="@+id/textView37"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="18dp"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Qty"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/priceEditText"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView36"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="18dp"-->
+<!--        android:layout_marginStart="40dp"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Price"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/productNoDialogTxt"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/countEditText"-->
+<!--        android:layout_width="65dp"-->
+<!--        android:layout_height="35dp"-->
+<!--        android:ems="100"-->
+<!--        android:hint="จำนวน"-->
+<!--        android:inputType="number"-->
+<!--        android:textSize="10sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/textView37"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/priceEditText" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/priceEditText"-->
+<!--        android:layout_width="65dp"-->
+<!--        android:layout_height="35dp"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:ems="100"-->
+<!--        android:hint="ราคา"-->
+<!--        android:inputType="number"-->
+<!--        android:textSize="10sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/textView36"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/cancelButton"-->
+<!--        android:layout_width="105dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginStart="100dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:backgroundTint="@color/date_color"-->
+<!--        android:text="ยกเลิก"-->
+<!--        android:textSize="15sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/packDialogText" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/submitButton"-->
+<!--        android:layout_width="105dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:backgroundTint="@color/teal_200"-->
+<!--        android:text="ยืนยัน"-->
+<!--        android:textSize="15sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/cancelButton"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/cancelButton" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/productNoDialogTxt"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="18dp"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:layout_marginTop="12dp"-->
+<!--        android:text="88529710220"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/productNameDialogTxt"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:layout_marginTop="6dp"-->
+<!--        android:text="Beer Leo Bottle 620ML "-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="12sp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/productNoDialogTxt" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/packDialogText"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:layout_marginTop="6dp"-->
+<!--        android:text="Pack 24"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="12sp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/productNameDialogTxt" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/totalPriceDialogTxt"-->
+<!--        android:layout_width="158dp"-->
+<!--        android:layout_height="23dp"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:gravity="end"-->
+<!--        android:text="Total Price     1,100.00"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/packDialogText"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/countEditText" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
