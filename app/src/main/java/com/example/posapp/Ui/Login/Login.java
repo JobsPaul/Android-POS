@@ -116,7 +116,7 @@ public class Login extends AppCompatActivity implements OnUserClickListener {
 
 
                 String password = editText.getText().toString();
-                //String password = "9999";
+            
                 String bcryptHashString = BCrypt.withDefaults().hashToString(12, password.toCharArray());
                 System.out.println("Hash Password : " + bcryptHashString);
 
