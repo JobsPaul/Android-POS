@@ -42,7 +42,7 @@ public class DialogBoxUsersFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Toast.makeText(getActivity(), "Result :" + data[i], Toast.LENGTH_LONG).show();
-                onUserClickListener.onUserClick(data[i]);
+                onUserClickListener.onUserClick(data[i]+ "");
             }
         });
 

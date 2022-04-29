@@ -2,62 +2,54 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/customersReclerview"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:orientation="vertical">
+
+    <Button
+        android:id="@+id/selectCustomerBtn"
+        android:layout_width="184dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue"
+        android:text="เลือกชื่อลูกค้า"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customersRecyclerView" />
 
     <View
         android:id="@+id/view2"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
+        android:background="@color/blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/blue"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/customersRecyclerView"
+        android:layout_width="362dp"
+        android:layout_height="402dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
         android:id="@+id/titleCustomDialog"
         android:layout_width="338dp"
         android:layout_height="28dp"
         android:layout_marginTop="5dp"
-        android:text="  รายการพักบิล"
+        android:text="  รายชื่อลูกค้า"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/subtitleDialog"
-        android:layout_width="338dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="5dp"
-        android:text='    เลือกรายการพักบิลไปยังหน้า "ขายสินค้า" ต่อหรือไม่ ?'
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
-
-    <Button
-        android:id="@+id/submitBtn"
-        android:layout_width="88dp"
-        android:layout_height="0dp"
-        android:backgroundTint="@color/teal_700"
-        android:text="ตกลง"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/cancelBtn"
-        android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/date_color"
-        android:text="ยกเลิก"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/submitBtn" />
 
     <ImageButton
         android:id="@+id/cancelCustomIconBtn"
@@ -72,5 +64,6 @@
         app:layout_constraintTop_toTopOf="@+id/view2"
         app:srcCompat="@drawable/ic_baseline_clear_red"
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

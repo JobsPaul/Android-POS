@@ -63,7 +63,7 @@ public class RecyclerAdapterOrders extends RecyclerView.Adapter<RecyclerAdapterO
         CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardView = itemView.findViewById(R.id.click2);
+            cardView = itemView.findViewById(R.id.customerClick);
             orderNo = itemView.findViewById(R.id.nameProductTxt);
             dateOrder = itemView.findViewById(R.id.dateOrderTxt);
             statusOrder = itemView.findViewById(R.id.statusOrderTxt);

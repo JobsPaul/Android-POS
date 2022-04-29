@@ -1,14 +1,15 @@
 package com.example.posapp.Ui.sale;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +17,8 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -32,28 +30,41 @@ import android.widget.Toolbar;
 
 import com.example.posapp.MainMenu;
 import com.example.posapp.R;
-import com.example.posapp.Ui.Login.Login;
-import com.example.posapp.Ui.Login.Models.UserModel;
-import com.example.posapp.Ui.Login.OnUserClickListener;
 import com.example.posapp.Ui.order.Models.OrderModel;
-import com.example.posapp.Ui.order.OrderMenu;
+import com.example.posapp.Ui.sale.Controllers.ApiCallers;
+import com.example.posapp.Ui.sale.Models.CustomerModel;
+import com.example.posapp.Ui.sale.Models.ICallBackOrderStatus;
+import com.example.posapp.Ui.sale.Models.ICallBackProducts;
 import com.example.posapp.Ui.sale.Models.OnTotalClickListener;
+import com.example.posapp.Ui.sale.Models.OnUserClickListener;
 import com.example.posapp.Ui.sale.Models.ProductModel;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, OnUserClickListener, OnTotalClickListener {
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, recyclerViewCustomer;
     RecyclerAdapterProducts adapter;
+    RecyclerAdapterCustomers adapterCustomers;
     Button selectUserBtn, salePopupBtn, confirmOrderBtn, cancelOrderBtn;
     ProductModel products, products2, products3, products4;
+    CustomerModel customer;
     EditText commentEditTxt;
+    public static ArrayList<CustomerModel> customersList = new ArrayList<>();
     public static ArrayList<ProductModel> productsList = new ArrayList<>();
+    List<ProductModel> productsListModel;
     public static ArrayList<OrderModel> orderList = new ArrayList<>();
     public static ArrayList<OrderModel> orderHoldBillList = new ArrayList<>();
     public static OrderModel orderModel;
     TextView orderNo, dataOrder,statusOrder, customerOrder, netTotalOrder, totalOrder, discount, delivery;
     Toolbar toolbar;
+    //External Storage
+    SharedPreferences mySharedPreferences;
+    String bodyToken, token;
 
     public static String orderNoValue, orderDateValue, orderStatusValue, orderCustomerValue, orderUserValue, orderTotalValue;
     Bundle extras;
@@ -65,8 +76,6 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
     public static int indexOrder;
     public static Boolean value;
 
-    String userName[] = {"JOB1", "JOB2", "JOB3" ,"JOB4", "JOB5", "JOB6", "JOB7", "JOB8", "JOB1", "JOB2", "JOB3" ,"JOB4", "JOB5", "JOB6", "JOB7", "JOB8"};
-    String customer[] = {"บุคคลทั่วไป", "ยายแดง", "ยายก้อย" ,"ยายหมี", "ตาบอย", "พี่หนุ่ม"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,20 +102,28 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         toolbar = findViewById(R.id.action_search);
         getSupportActionBar();
 
+        showPopup();
+
+        SharedPreferences mySharedPreferences = getSharedPreferences("tokenStorage", Context.MODE_PRIVATE);
+        token = mySharedPreferences.getString("token", "");
+
+        loadCustomer();
+
        extras = getIntent().getExtras();
         if (extras != null) {
             value = extras.getBoolean("key");
             if (value.equals(true)) {
-                loadData();
+                //loadData();
             } else {
-                loadDataOrder();
+                //loadDataOrder();
             }
         }
 
         selectUserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DialogBoxUsersFragment(SaleMenu.this, customer).show(getSupportFragmentManager(), "Null");
+                //new DialogBoxUsersFragment(SaleMenu.this, customer).show(getSupportFragmentManager(), "Null");
+                showDialogCustomerList();
             }
         });
 
@@ -128,7 +145,8 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         cancelOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialogCancelProduct();
+                //showDialogCancelProduct();
+                getProducts();
                 // Action goes here
 //                AlertDialog.Builder builder1 = new AlertDialog.Builder(SaleMenu.this);
 //                builder1.setMessage("คุณต้องการยกเลิกรายการขายหรือไม่ ?");
@@ -174,13 +192,107 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
 
         commentEditTxt.setInputType(InputType.TYPE_NULL);
 
+//        recyclerView = findViewById(R.id.ordersReclerview);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        adapter = new RecyclerAdapterProducts(this, productsList);
+//        recyclerView.setAdapter(adapter);
+
+        statusBarColor();
+
         recyclerView = findViewById(R.id.ordersReclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RecyclerAdapterProducts(this, productsList);
         recyclerView.setAdapter(adapter);
+    }
 
-        statusBarColor();
+    private void getProducts() {
+        ApiCallers apiCallers = new ApiCallers(this);
+        apiCallers.getProducts("08240-M99O0CT2", token, new ICallBackProducts() {
+            @Override
+            public void onGetProduct(String productId, String productNo, String productName, double price, double count, double pack, double totalPrice, double maxPrice, double minPrice, String picture) {
+                System.out.println("Result Sale : " + productId + " "+ productNo + " "+ productName + " "+ price + " "+ count + " "+ pack + " "+ totalPrice + " "+ maxPrice + " "+ minPrice + " "+ picture + " ");
+                products = new ProductModel(productId, productNo,productName,price,count,pack,totalPrice,maxPrice,minPrice,picture);
+                productsList.add(0 ,products);
+                adapter.notifyItemInserted(0);
+                recyclerView.scrollToPosition(0);
+                for (ProductModel i : productsList) {
+                    System.out.println("Result Sale : " + i.getProductId());
+                }
+//                ProductModel getProductsList = new ProductModel();
+//                getProductsList.setProductId(productId);
+//                getProductsList.setProductNo(productNo);
+//                getProductsList.setProductName(productName);
+//                getProductsList.setCount(count);
+//                getProductsList.setPack(pack);
+//                getProductsList.setTotalPrice(totalPrice);
+//                getProductsList.setMinPrice(minPrice);
+//                getProductsList.setMaxPrice(maxPrice);
+//                getProductsList.setPrice(price);
+//                getProductsList.setPicture(picture);
+//                productsListModel.add(getProductsList);
+//
+            }
 
+
+
+//            @Override
+//            public void onGetProduct(String result) {
+//                System.out.println("Resut Products : " + result);
+//                try {
+//                    JSONArray jsonArray = new JSONArray(result);
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                        ProductModel getProductsList = new ProductModel();
+//                        getProductsList.setProductId(jsonObject.getString("productId"));
+//                        getProductsList.setProductNo(jsonObject.getString("productCode"));
+//                        getProductsList.setProductName(jsonObject.getString("productName"));
+//                        getProductsList.setMinPrice(Integer.parseInt(jsonObject.getString("minPrice")));
+//                        getProductsList.setMaxPrice(Integer.parseInt(jsonObject.getString("maxPrice")));
+//                        getProductsList.setPrice(Integer.parseInt(jsonObject.getString("price")));
+//                        getProductsList.setPicture(jsonObject.getString("picture"));
+//                        productsListModel.add(getProductsList);
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+        });
+
+    }
+
+    private void showDialogCustomerList() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.custom_alert_dialog_customers);
+        TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
+        ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
+        recyclerViewCustomer = dialog.findViewById(R.id.customersRecyclerView);
+        Button selectCustomerBtn = dialog.findViewById(R.id.selectCustomerBtn);
+
+        tileDialog.setText("  รายชื่อลูกค้า");
+
+        recyclerViewCustomer.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCustomer.setLayoutManager(new LinearLayoutManager(this));
+        adapterCustomers = new RecyclerAdapterCustomers(this, customersList);
+        recyclerViewCustomer.setAdapter(adapterCustomers);
+
+        selectCustomerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        cancelIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void showDialogCancelProduct() {
@@ -188,11 +300,11 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog);
-        TextView tileDialog = dialog.findViewById(R.id.titleDialog);
+        TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
         TextView subTitleDialog = dialog.findViewById(R.id.subtitleDialog);
         Button submit = dialog.findViewById(R.id.submitBtn);
         Button cancel = dialog.findViewById(R.id.cancelBtn);
-        ImageButton cancelIcon = dialog.findViewById(R.id.cancelIconBtn);
+        ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
 
         tileDialog.setText("  ยกเลิกรายการขาย");
         subTitleDialog.setText("   คุณต้องการยกเลิกรายการขายหรือไม่ ?");
@@ -228,11 +340,11 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog_comment);
-        TextView tileDialog = dialog.findViewById(R.id.titleDialog);
+        TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
         TextView subTitleDialog = dialog.findViewById(R.id.subtitleDialog);
         Button submit = dialog.findViewById(R.id.submitBtn);
         Button cancel = dialog.findViewById(R.id.cancelBtn);
-        ImageButton cancelIcon = dialog.findViewById(R.id.cancelIconBtn);
+        ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
 
         tileDialog.setText("  คำอธิบายสินค้า");
         subTitleDialog.setText("   กรุณาใส่คำอธิบายสินค้าในช่องด้านล่าง");
@@ -381,11 +493,140 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         dialog.show();
     }
 
-    public void showPopup(View view) {
-        PopupMenu popupMenu = new PopupMenu(this, view);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.inflate(R.menu.popup_menu_sale);
-        popupMenu.show();
+    public void showPopup() {
+        Button button = findViewById(R.id.salePopupBtn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+                ApiCallers apiCallers = new ApiCallers(getApplicationContext());
+                apiCallers.getOrderStatus(token, new ICallBackOrderStatus() {
+                    @Override
+                    public void onGetOrderStatus(String result) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(result);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                popupMenu.getMenu().add(jsonObject.getString("statusText"));
+                                System.out.println("Status : " + popupMenu.getMenu().getItem(i));
+                            }
+                            popupMenu.show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        System.out.println("Status : " + menuItem.getTitle());
+                        String result = menuItem.getTitle().toString();
+                        salePopupBtn.setText(result);
+                        return false;
+                    }
+                });
+//                ApiCallers apiCallers = new ApiCallers(getApplicationContext());
+//                apiCallers.getOrderStatus(token, new ICallBackOrderStatus() {
+//                    @Override
+//                    public void onGetOrderStatus(String result) {
+//                        try {
+//                            JSONArray jsonArray = new JSONArray(result);
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                                popupMenu.getMenu().add(jsonObject.getString("statusText"));
+//                                System.out.println("Status : " + popupMenu.getMenu().getItem(i));
+//                            }
+//                            popupMenu.show();
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        System.out.println("Status : " + menuItem.getTitle());
+//                        String result = menuItem.getTitle().toString();
+//                        salePopupBtn.setText(result);
+//                        return false;
+//                    }
+//                });
+            }
+        });
+
+//        this.findViewById(R.id.salePopupBtn).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+//                popupMenu.getMenu().add("1");
+//                popupMenu.getMenu().add("2");
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem menuItem) {
+//                        System.out.println("Status : " + menuItem.getTitle());
+//                        return true;
+//                        int i = menuItem.getItemId();
+//                        System.out.println("Status : " + i);
+//                        if (i == 0) {
+//                            System.out.println("Status : " + menuItem.getItemId());
+//                            //handle share
+//                            return true;
+//                        } else if (i == 1) {
+//                            System.out.println("Status : " + menuItem.getItemId());
+//                            //handle comment
+//                            return true;
+//                        } else {
+//                            return false;
+//                        }
+//                    }
+//                });
+//                popupMenu.show();
+//            }
+//        });
+
+        //PopupMenu popupMenu = new PopupMenu(this, view);
+        //popupMenu.setOnMenuItemClickListener(this);
+//        popupMenu.inflate(R.menu.popup_menu_sale);
+//
+//        popupMenu.getMenu().add("1");
+//        popupMenu.getMenu().add("2");
+//        popupMenu.show();
+////        ApiCallers apiCallers = new ApiCallers(this);
+////        apiCallers.getOrderStatus(token, new ICallBackOrderStatus() {
+////            @Override
+////            public void onGetOrderStatus(String result) {
+//                try {
+//                    JSONArray jsonArray = new JSONArray(result);
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                        popupMenu.getMenu().add(jsonObject.getString("statusText"));
+//                        System.out.println("Status : " + popupMenu.getMenu().getItem(i));
+//                    }
+//                    popupMenu.show();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+////        });
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                System.out.println("Status : " + menuItem.getItemId());
+//                return true;
+////                switch (menuItem.getItemId()) {
+////                    case  R.id.item1:
+////                        //salePopupBtn.setText("ขาย");
+////                        System.out.println("Status : " + menuItem.getItemId());
+////                        return true;
+////                    case  R.id.item2:
+////                        //salePopupBtn.setText("พักบิล");
+////                        System.out.println("Status2 : " + menuItem.getItemId());
+////                        return true;
+////                    default:
+////                        return false;
+////                }
+//            }
+//        });
     }
 
     @Override
@@ -402,10 +643,10 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         }
     }
 
-    @Override
-    public void onUserClick(String userData) {
-        selectUserBtn.setText(userData);
-    }
+//    @Override
+//    public void onUserClick(String userData) {
+//        selectUserBtn.setText(userData);
+//    }
 
     @Override
     public void onUserTotalClick(String totalValue) {
@@ -417,61 +658,82 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         netTotalOrder.setText(String.valueOf(totalPriceOrder += (totalPriceOrder * 0.07)));
     }
 
-    public void loadData() {
-        products = new ProductModel("88529710220","Beer Leo Bottle 620ML", 625, 100, 12, 625000);
-        products2 = new ProductModel("88529714402","CocaCola Bottle 250ML", 2250, 40, 24, 90000);
-        products3 = new ProductModel("66777240529","มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
-        products4 = new ProductModel("66777240520","มาม่า รสต้มยำกุ้ง2 220ml", 55, 20, 6, 1100);
-
-
-        productsList.add(products);
-        productsList.add(products2);
-        productsList.add(products3);
-        productsList.add(products4);
-
-        for (ProductModel productModel : productsList) {
-            totalPriceOrder += productModel.getTotalPrice();
-        }
-
-//        orderNo = findViewById(R.id.orderNoSaleTxt);
-//        dataOrder = findViewById(R.id.dataOrderSaleTxt);
-//        netTotalOrder = findViewById(R.id.netTotalSaleTxt);
-//        totalOrder = findViewById(R.id.totalSaleTxt);
-//        discount = findViewById(R.id.discountSaleTxt);
-//        salePopupBtn = findViewById(R.id.salePopupBtn);
-
-        orderNo.setText("SO210001120");
-        totalOrder.setText(String.valueOf(totalPriceOrder));
-        netTotalOrder.setText(String.valueOf(totalPriceOrder += (totalPriceOrder * 0.07)));
+    public void loadCustomer() {
+//        customer1 = new CustomerModel("JOBS", "ปราจีน");
+//        customersList.add(customer1);
+        ApiCallers apiCallers = new ApiCallers(this);
+        apiCallers.getCustomers(token, new ICallBackOrderStatus() {
+            @Override
+            public void onGetOrderStatus(String result) {
+                try {
+                    JSONArray jsonArray = new JSONArray(result);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        customer = new CustomerModel(jsonObject.getString("customerName"), jsonObject.getString("city"));
+                        customersList.add(customer);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    public void loadDataOrder() {
-        orderNoValue = extras.getString("orderNo");
-        orderDateValue = extras.getString("orderDate");
-        orderStatusValue = extras.getString("orderStatus");
-        orderCustomerValue = extras.getString("orderCustomer");
-        orderUserValue = extras.getString("orderUser");
-        orderTotalValue = extras.getString("orderTotal");
-        indexOrder = extras.getInt("indexOrder");
-        products = new ProductModel("88529710220","Beer Leo Bottle 620ML", 625, 1000, 12, 625000);
-        products2 = new ProductModel("88529714402","CocaCola Bottle 250ML", 2250, 40, 24, 90000);
-        products3 = new ProductModel("66777240529","มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
+//    public void loadData() {
+//        products = new ProductModel("88529710220","Beer Leo Bottle 620ML", 625, 100, 12, 625000);
+//        products2 = new ProductModel("88529714402","CocaCola Bottle 250ML", 2250, 40, 24, 90000);
+//        products3 = new ProductModel("66777240529","มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
+//        products4 = new ProductModel("66777240520","มาม่า รสต้มยำกุ้ง2 220ml", 55, 20, 6, 1100);
+//
+//
+//        productsList.add(products);
+//        productsList.add(products2);
+//        productsList.add(products3);
+//        productsList.add(products4);
+//
+//        for (ProductModel productModel : productsList) {
+//            totalPriceOrder += productModel.getTotalPrice();
+//        }
+//
+////        orderNo = findViewById(R.id.orderNoSaleTxt);
+////        dataOrder = findViewById(R.id.dataOrderSaleTxt);
+////        netTotalOrder = findViewById(R.id.netTotalSaleTxt);
+////        totalOrder = findViewById(R.id.totalSaleTxt);
+////        discount = findViewById(R.id.discountSaleTxt);
+////        salePopupBtn = findViewById(R.id.salePopupBtn);
+//
+//        orderNo.setText("SO210001120");
+//        totalOrder.setText(String.valueOf(totalPriceOrder));
+//        netTotalOrder.setText(String.valueOf(totalPriceOrder += (totalPriceOrder * 0.07)));
+//    }
 
-        productsList.add(products);
-        productsList.add(products2);
-        productsList.add(products3);
-
-        int sum = Integer.parseInt(orderTotalValue);
-
-        orderNo.setText(orderNoValue);
-        dataOrder.setText(orderDateValue);
-        salePopupBtn.setText(orderStatusValue);
-        selectUserBtn.setText(orderCustomerValue);
-        delivery.setText(orderUserValue);
-        netTotalOrder.setText(orderTotalValue);
-        totalOrder.setText(String.valueOf(sum -= (sum * 0.07)));
-        System.out.println("Index data : " + indexOrder);
-    }
+//    public void loadDataOrder() {
+//        orderNoValue = extras.getString("orderNo");
+//        orderDateValue = extras.getString("orderDate");
+//        orderStatusValue = extras.getString("orderStatus");
+//        orderCustomerValue = extras.getString("orderCustomer");
+//        orderUserValue = extras.getString("orderUser");
+//        orderTotalValue = extras.getString("orderTotal");
+//        indexOrder = extras.getInt("indexOrder");
+//        products = new ProductModel("88529710220","Beer Leo Bottle 620ML", 625, 1000, 12, 625000);
+//        products2 = new ProductModel("88529714402","CocaCola Bottle 250ML", 2250, 40, 24, 90000);
+//        products3 = new ProductModel("66777240529","มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
+//
+//        productsList.add(products);
+//        productsList.add(products2);
+//        productsList.add(products3);
+//
+//        int sum = Integer.parseInt(orderTotalValue);
+//
+//        orderNo.setText(orderNoValue);
+//        dataOrder.setText(orderDateValue);
+//        salePopupBtn.setText(orderStatusValue);
+//        selectUserBtn.setText(orderCustomerValue);
+//        delivery.setText(orderUserValue);
+//        netTotalOrder.setText(orderTotalValue);
+//        totalOrder.setText(String.valueOf(sum -= (sum * 0.07)));
+//        System.out.println("Index data : " + indexOrder);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -504,4 +766,10 @@ public class SaleMenu extends AppCompatActivity implements PopupMenu.OnMenuItemC
         });
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    public void onCustomersClick(String userData) {
+        selectUserBtn.setText(userData);
+    }
+
 }

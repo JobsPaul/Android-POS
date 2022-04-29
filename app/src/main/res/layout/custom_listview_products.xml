@@ -2,21 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="3dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/click2"
-        android:layout_width="350dp"
-        android:layout_height="70dp"
+        android:id="@+id/customerClick"
+        android:layout_width="351dp"
+        android:layout_height="75dp"
         android:layout_gravity="center"
-        android:clickable="true"
         android:backgroundTint="@color/white"
+        android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="@color/design_default_color_primary"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="5dp"
         app:cardElevation="1dp">
 
 
@@ -24,77 +24,74 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/totalPrice"
-                android:layout_width="169dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="4dp"
-                android:text="Total Price     1,100.00"
-                android:textColor="@color/blue"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/priceText" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/qtyText"-->
+            <!--                android:layout_width="100dp"-->
+            <!--                android:layout_height="20dp"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:text="จำนวน 1,000"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:visibility="invisible"-->
+            <!--                app:layout_constraintStart_toEndOf="@+id/priceText"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/addressTxt" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/priceText"-->
+            <!--                android:layout_width="100dp"-->
+            <!--                android:layout_height="20dp"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:text="ราคา 625.00"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:visibility="invisible"-->
+            <!--                app:layout_constraintStart_toEndOf="@+id/imageView2"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/addressTxt" />-->
 
             <TextView
-                android:id="@+id/priceText"
-                android:layout_width="80dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="92dp"
-                android:text="Price 625.00"
+                android:id="@+id/totalPriceTxt"
+                android:layout_width="135dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:text="ราคารวม   1,100.00"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/productSaleImageView"
+                app:layout_constraintTop_toBottomOf="@+id/nameProductSaleTxt" />
+
+            <TextView
+                android:id="@+id/nameProductSaleTxt"
+                android:layout_width="246dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Beer Leo Bottle  สีดำ 620ML "
                 android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/productSaleImageView"
+                app:layout_constraintTop_toTopOf="@+id/productSaleImageView" />
 
             <TextView
                 android:id="@+id/qtyText"
-                android:layout_width="70dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginEnd="16dp"
-                android:text="Qty 1,000"
-                android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/priceText"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/productNameTxt"
-                android:layout_width="140dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:text="Beer Leo Bottle 620ML "
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:text="จำนวน 1,000 ชิ้น"
                 android:textColor="@color/black"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/productNoTxt" />
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/totalPriceTxt"
+                app:layout_constraintTop_toBottomOf="@+id/nameProductSaleTxt" />
 
-            <TextView
-                android:id="@+id/productNoTxt"
-                android:layout_width="100dp"
-                android:layout_height="18dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="6dp"
-                android:text="88529710220"
-                android:textColor="@color/black"
-                android:textStyle="bold"
+            <ImageView
+                android:id="@+id/productSaleImageView"
+                android:layout_width="69dp"
+                android:layout_height="66dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/packTxt"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:text="Pack 24"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/productNoTxt" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/product_mama" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

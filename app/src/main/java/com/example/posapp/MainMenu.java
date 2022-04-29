@@ -1,10 +1,15 @@
 package com.example.posapp;
 
+import static java.lang.System.currentTimeMillis;
+
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -12,14 +17,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
+import com.example.posapp.Ui.Login.Controllers.ApiCallers;
 import com.example.posapp.Ui.Login.Login;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.posapp.Ui.Login.Models.ICallBackUserProfile;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,10 +33,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.posapp.databinding.ActivityMainMenuBinding;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
 public class MainMenu extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainMenuBinding binding;
+    //External Storage
+    SharedPreferences mySharedPreferences;
+    String bodyToken, token;
+    int exp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +72,72 @@ public class MainMenu extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = headerView.findViewById(R.id.userNameProfileTxt);
-        navUsername.setText(Login.User);
+//        View headerView = navigationView.getHeaderView(0);
+//        TextView navUsername = headerView.findViewById(R.id.userNameProfileTxt);
+//        navUsername.setText(Login.User);
 
         statusBarColor();
 
+        SharedPreferences mySharedPreferences = getSharedPreferences("tokenStorage", Context.MODE_PRIVATE);
+        token = mySharedPreferences.getString("token", "");
+//        System.out.println("Result3 : " + mySharedPreferences.getString("token", ""));
+//        System.out.println("Result3 : " + mySharedPreferences.getString("exp", ""));
+//        Toast.makeText(MainMenu.this,"Result token : " + mySharedPreferences.getString("token", ""),Toast.LENGTH_SHORT).show();
+
+
+        ApiCallers apiCallers = new ApiCallers(this);
+        apiCallers.getEmployeesByUsername(token, "new", new ICallBackUserProfile() {
+            @Override
+            public void getUserProfile(String empId, String username, String fName, String email) {
+                View headerView = navigationView.getHeaderView(0);
+                View headerView2 = navigationView.getHeaderView(0);
+                TextView navUsername = headerView.findViewById(R.id.userNameProfileTxt);
+                TextView navUsername2 = headerView2.findViewById(R.id.userNameProfileTxt2);
+                navUsername.setText(fName);
+                navUsername2.setText(email);
+            }
+
+        });
+
+        try {
+            decoded(mySharedPreferences.getString("token", "").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        getBody();
+
+    }
+
+    public void decoded(String JWTEncoded) throws Exception {
+        try {
+            String[] split = JWTEncoded.split("\\.");
+            Log.d("JWT_DECODED", "Header: " + getJson(split[0]));
+            Log.d("JWT_DECODED", "Body: " + getJson(split[1]));
+            bodyToken = getJson(split[1]);
+        } catch (UnsupportedEncodingException e) {
+            //Error
+        }
+    }
+
+    private String getJson(String strEncoded) throws UnsupportedEncodingException{
+        byte[] decodedBytes = Base64.decode(strEncoded, Base64.URL_SAFE);
+        return new String(decodedBytes, "UTF-8");
+    }
+
+    private void getBody() {
+        try {
+            JSONObject respObj = new JSONObject(bodyToken);
+            exp = Integer.parseInt(respObj.getString("exp"));
+
+//            if (1651074364*999.9487 < currentTimeMillis()) {
+            if (1651074364*1000 < currentTimeMillis()) {
+                System.out.println("exp : เบิดอายุุ");
+            }
+            System.out.println("exp : " + currentTimeMillis()/1000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void statusBarColor() {
@@ -129,11 +202,11 @@ public class MainMenu extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog);
-        TextView tileDialog = dialog.findViewById(R.id.titleDialog);
+        TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
         TextView subTitleDialog = dialog.findViewById(R.id.subtitleDialog);
         Button submit = dialog.findViewById(R.id.submitBtn);
         Button cancel = dialog.findViewById(R.id.cancelBtn);
-        ImageButton cancelIcon = dialog.findViewById(R.id.cancelIconBtn);
+        ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
 
         tileDialog.setText("  ออกจากระบบ");
         subTitleDialog.setText("   คุณต้องการออกจากระบบหรือไม่ ?");

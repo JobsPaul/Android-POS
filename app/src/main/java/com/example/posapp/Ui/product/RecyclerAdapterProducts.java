@@ -1,17 +1,10 @@
 package com.example.posapp.Ui.product;
 
-import static com.example.posapp.Ui.product.ProductMenu.productModelArrayList;
-
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +12,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.posapp.MainMenu;
 import com.example.posapp.R;
-import com.example.posapp.Ui.Login.RecyclerAdapterUser;
-import com.example.posapp.Ui.order.Models.OrderModel;
-import com.example.posapp.Ui.order.RecyclerAdapterOrders;
 import com.example.posapp.Ui.product.Models.ProductModel;
-import com.example.posapp.Ui.sale.SaleMenu;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -156,11 +141,11 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerAdapte
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.custom_alert_dialog);
-            TextView tileDialog = dialog.findViewById(R.id.titleDialog);
+            TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
             TextView subTitleDialog = dialog.findViewById(R.id.subtitleDialog);
             Button submit = dialog.findViewById(R.id.submitBtn);
             Button cancel = dialog.findViewById(R.id.cancelBtn);
-            ImageButton cancelIcon = dialog.findViewById(R.id.cancelIconBtn);
+            ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
 
             tileDialog.setText(title);
             subTitleDialog.setText(subTitle);

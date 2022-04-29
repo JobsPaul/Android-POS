@@ -271,11 +271,11 @@ public class AddProduct extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog);
-        TextView tileDialog = dialog.findViewById(R.id.titleDialog);
+        TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
         TextView subTitleDialog = dialog.findViewById(R.id.subtitleDialog);
         Button submit = dialog.findViewById(R.id.submitBtn);
         Button cancel = dialog.findViewById(R.id.cancelBtn);
-        ImageButton cancelIcon = dialog.findViewById(R.id.cancelIconBtn);
+        ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
 
         tileDialog.setText(title);
         subTitleDialog.setText(subTitle);

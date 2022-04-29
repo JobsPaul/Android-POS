@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/titleDialog"
+        android:id="@+id/titleCustomDialog"
         android:layout_width="338dp"
         android:layout_height="28dp"
         android:layout_marginTop="5dp"
@@ -79,7 +79,7 @@
         app:layout_constraintEnd_toStartOf="@+id/submitBtn" />
 
     <ImageButton
-        android:id="@+id/cancelIconBtn"
+        android:id="@+id/cancelCustomIconBtn"
         android:layout_width="28dp"
         android:layout_height="27dp"
         android:layout_marginEnd="8dp"

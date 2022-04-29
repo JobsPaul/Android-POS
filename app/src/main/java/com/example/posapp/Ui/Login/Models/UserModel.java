@@ -4,6 +4,7 @@ public class UserModel {
     public String employeeId;
     public String username;
     public String fName;
+    public String token;
 
     public UserModel() {}
     public UserModel(String employeeId, String username, String fName) {
@@ -35,4 +36,6 @@ public class UserModel {
     public void setFName(String fName) {
         this.fName = fName;
     }
+
+    public void setToken(String token) { this.token = token; }
 }

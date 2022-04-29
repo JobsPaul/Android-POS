@@ -40,7 +40,7 @@ public class SummarySaleMenu extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary_sale);
-        loadData();
+//        loadData();
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.blue)));
         getSupportActionBar().setTitle(Html.fromHtml("<b><font> สรุปรายการขาย </font></b>"));
@@ -198,19 +198,19 @@ public class SummarySaleMenu extends AppCompatActivity  {
         dialog.show();
     }
 
-    public void loadData() {
-        for (int i = 0; i < 1; i++) {
-            products = new ProductModel("88529710220", "Beer Leo Bottle 620ML", 625, 100, 12, 625000);
-            products2 = new ProductModel("88529714402", "CocaCola Bottle 250ML", 2250, 40, 24, 90000);
-            products3 = new ProductModel("66777240529", "มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
-            products4 = new ProductModel("66777240520", "มาม่า รสต้มยำกุ้ง2 220ml", 55, 20, 6, 1100);
-
-
-            productsList.add(products);
+//    public void loadData() {
+//        for (int i = 0; i < 1; i++) {
+//            products = new ProductModel("88529710220", "Beer Leo Bottle 620ML", 625, 100, 12, 625000);
+//            products2 = new ProductModel("88529714402", "CocaCola Bottle 250ML", 2250, 40, 24, 90000);
+//            products3 = new ProductModel("66777240529", "มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
+//            products4 = new ProductModel("66777240520", "มาม่า รสต้มยำกุ้ง2 220ml", 55, 20, 6, 1100);
+//
+//
+//            productsList.add(products);
 //            productsList.add(products2);
 //            productsList.add(products3);
 //            productsList.add(products4);
-        }
+//        }
 //        products = new ProductModel("88529710220", "Beer Leo Bottle 620ML", 625, 100, 12, 625000);
 //        products2 = new ProductModel("88529714402", "CocaCola Bottle 250ML", 2250, 40, 24, 90000);
 //        products3 = new ProductModel("66777240529", "มาม่า รสต้มยำกุ้ง 220ml", 55, 20, 6, 1100);
@@ -221,5 +221,5 @@ public class SummarySaleMenu extends AppCompatActivity  {
 //        productsList.add(products2);
 //        productsList.add(products3);
 //        productsList.add(products4);
-    }
+//    }
 }

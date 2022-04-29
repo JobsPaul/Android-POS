@@ -1,7 +1,6 @@
 package com.example.posapp.Ui.gallery;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -78,11 +76,11 @@ public class GalleryFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.custom_alert_dialog);
-        TextView tileDialog = dialog.findViewById(R.id.titleDialog);
+        TextView tileDialog = dialog.findViewById(R.id.titleCustomDialog);
         TextView subTitleDialog = dialog.findViewById(R.id.subtitleDialog);
         Button submit = dialog.findViewById(R.id.submitBtn);
         Button cancel = dialog.findViewById(R.id.cancelBtn);
-        ImageButton cancelIcon = dialog.findViewById(R.id.cancelIconBtn);
+        ImageButton cancelIcon = dialog.findViewById(R.id.cancelCustomIconBtn);
 
         tileDialog.setText("  ออกจากระบบ");
         subTitleDialog.setText("   คุณต้องการออกจากระบบหรือไม่ ?");

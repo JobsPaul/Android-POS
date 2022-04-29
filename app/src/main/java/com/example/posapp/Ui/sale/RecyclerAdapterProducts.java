@@ -2,7 +2,6 @@ package com.example.posapp.Ui.sale;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +17,10 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.posapp.R;
-import com.example.posapp.Ui.Login.Models.UserModel;
-import com.example.posapp.Ui.Login.OnUserClickListener;
 import com.example.posapp.Ui.sale.Models.OnTotalClickListener;
 import com.example.posapp.Ui.sale.Models.ProductModel;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -52,12 +52,13 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapterProducts.ViewHolder holder, int position) {
-        holder.productsNo.setText(productsList.get(position).getProductNo());
+//        holder.productsNo.setText(productsList.get(position).getProductNo());
         holder.productsName.setText(productsList.get(position).getProductName());
-        holder.price.setText("ราคา " + String.valueOf(productsList.get(position).getPrice()));
-        holder.count.setText("จำนวน " + String.valueOf(productsList.get(position).getCount()));
-        holder.pack.setText("Pack " + String.valueOf(productsList.get(position).getPack()));
-        holder.totalPrice.setText("ราคารวม    " + String.valueOf(productsList.get(position).getTotalPrice()));
+        holder.totalPrice.setText("ราคา " + String.valueOf(productsList.get(position).getPrice()) + " บาท");
+ //       holder.count.setText("จำนวน " + String.valueOf(productsList.get(position).getCount()) + " ชิ้น");
+//        holder.pack.setText("Pack " + String.valueOf(productsList.get(position).getPack()));
+//        holder.totalPrice.setText("ราคารวม    " + String.valueOf(productsList.get(position).getTotalPrice()));
+        Picasso.get().load(productsList.get(position).getPicture()).networkPolicy(NetworkPolicy.NO_CACHE).error(R.drawable.ic_baseline_add_box).into(holder.productImage);
     }
 
     @Override
@@ -74,20 +75,22 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView productsNo, productsName, price, count, pack, totalPrice;
         CardView cardView;
+        ImageView productImage;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            productsNo = itemView.findViewById(R.id.productNoTxt);
-            productsName = itemView.findViewById(R.id.productNameTxt);
-            price = itemView.findViewById(R.id.priceText);
-            count = itemView.findViewById(R.id.qtyText);
-            pack = itemView.findViewById(R.id.packTxt);
-            totalPrice = itemView.findViewById(R.id.totalPrice);
+ //           productsNo = itemView.findViewById(R.id.productNoTxt);
+            productsName = itemView.findViewById(R.id.nameProductSaleTxt);
+//            price = itemView.findViewById(R.id.priceText);
+//            count = itemView.findViewById(R.id.qtyText);
+//            pack = itemView.findViewById(R.id.packTxt);
+            totalPrice = itemView.findViewById(R.id.totalPriceTxt);
+            productImage = itemView.findViewById(R.id.productSaleImageView);
 
-            cardView = itemView.findViewById(R.id.click2);
+            cardView = itemView.findViewById(R.id.customerClick);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialogView();
+                    //showDialogView();
                 }
             });
         }
@@ -109,33 +112,33 @@ public class RecyclerAdapterProducts extends RecyclerView.Adapter<RecyclerAdapte
             Button submitButton = dialog.findViewById(R.id.submitButton);
             Button cancelButton = dialog.findViewById(R.id.cancelButton);
             Button deleteButton = dialog.findViewById(R.id.deleteButton);
-            ImageButton imageCancelButton = dialog.findViewById(R.id.cancelIconBtn);
+            ImageButton imageCancelButton = dialog.findViewById(R.id.cancelCustomIconBtn);
 
-            productsNo.setText(productsList.get(getAdapterPosition()).getProductNo());
-            productsName.setText(productsList.get(getAdapterPosition()).getProductName());
-            price.setText(String.valueOf(productsList.get(getAdapterPosition()).getPrice()));
-            count.setText(String.valueOf(productsList.get(getAdapterPosition()).getCount()));
-            pack.setText("Pack " + String.valueOf(productsList.get(getAdapterPosition()).getPack()));
-            totalPrice.setText("Total Price     " + String.valueOf(productsList.get(getAdapterPosition()).getTotalPrice()));
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (price.getText().toString().isEmpty() || count.getText().toString().isEmpty()) {
-
-                    }
-                    else {
-                        productsList.set(getAdapterPosition(), new ProductModel(productsList.get(getAdapterPosition()).getProductNo(),
-                                productsList.get(getAdapterPosition()).getProductName(),
-                                Integer.parseInt(price.getText().toString()),
-                                Integer.parseInt(count.getText().toString()),
-                                productsList.get(getAdapterPosition()).getPack(),
-                                Integer.parseInt(price.getText().toString()) * Integer.parseInt(count.getText().toString())));
-                        notifyItemChanged(getAdapterPosition());
-                        onUserClickListener.onUserTotalClick("");
-                        dialog.dismiss();
-                    }
-                }
-            });
+//            productsNo.setText(productsList.get(getAdapterPosition()).getProductNo());
+//            productsName.setText(productsList.get(getAdapterPosition()).getProductName());
+//            price.setText(String.valueOf(productsList.get(getAdapterPosition()).getPrice()));
+//            count.setText(String.valueOf(productsList.get(getAdapterPosition()).getCount()));
+//            pack.setText("Pack " + String.valueOf(productsList.get(getAdapterPosition()).getPack()));
+//            totalPrice.setText("Total Price     " + String.valueOf(productsList.get(getAdapterPosition()).getTotalPrice()));
+//            submitButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (price.getText().toString().isEmpty() || count.getText().toString().isEmpty()) {
+//
+//                    }
+//                    else {
+//                        productsList.set(getAdapterPosition(), new ProductModel(productsList.get(getAdapterPosition()).getProductNo(),
+//                                productsList.get(getAdapterPosition()).getProductName(),
+//                                Integer.parseInt(price.getText().toString()),
+//                                Integer.parseInt(count.getText().toString()),
+//                                productsList.get(getAdapterPosition()).getPack(),
+//                                Integer.parseInt(price.getText().toString()) * Integer.parseInt(count.getText().toString())));
+//                        notifyItemChanged(getAdapterPosition());
+//                        onUserClickListener.onUserTotalClick("");
+//                        dialog.dismiss();
+//                    }
+//                }
+//            });
 
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
